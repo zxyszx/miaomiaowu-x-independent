@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Local independent API foundation; no official binary, database or license dependency."""
 import argparse
+import ipaddress
+import re
 import hmac
 import json
 import math
@@ -571,6 +573,8 @@ class Handler(BaseHTTPRequestHandler):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--port',type=int,default=45300)
+    parser.add_argument('--host',default='127.0.0.1',help='IPv4 listen address; defaults to loopback')
+    parser.add_argument('--external-origin',help='fixed trusted browser origin for direct legacy access')
     parser.add_argument('--data',type=Path,default=Path(__file__).resolve().parent/'data')
     parser.add_argument('--speed-local-server-id',type=int,
                         help='explicit registry server identity hosted on this machine for loopback VLESS measurements')
@@ -581,6 +585,30 @@ def main():
     parser.add_argument('--panel-tls-cert',type=Path)
     parser.add_argument('--panel-tls-key',type=Path)
     args=parser.parse_args()
+    if not 1 <= args.port <= 65535: parser.error('port must be between 1 and 65535')
+    try: listen_address=ipaddress.IPv4Address(args.host)
+    except ValueError: parser.error('host must be an IPv4 address')
+    if args.panel_loopback_test and not listen_address.is_loopback:
+        parser.error('panel loopback test requires a loopback listen address')
+    external=args.external_origin
+    if external is not None:
+        try:
+            value=urlsplit(external)
+            valid_port=value.port
+            valid=(value.scheme in ('http','https') and value.hostname and value.username is None and value.password is None
+                   and not value.path and not value.query and not value.fragment and not any(c.isspace() for c in external)
+                   and external==f'{value.scheme}://{value.netloc}' and not value.netloc.endswith(':')
+                   and (valid_port is None or 1<=valid_port<=65535))
+            if value.hostname:
+                try: valid=valid and not ipaddress.ip_address(value.hostname).is_unspecified
+                except ValueError:
+                    valid=valid and all(re.fullmatch(r'[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?',part) for part in value.hostname.split('.'))
+        except ValueError: valid=False
+        if not valid: parser.error('external-origin must be a fixed http/https origin without wildcard, credentials or path')
+    if external and args.panel_origin and external!=args.panel_origin:
+        parser.error('external-origin conflicts with panel-origin')
+    if not listen_address.is_loopback and not (external or args.panel_origin):
+        parser.error('non-loopback listening requires external-origin or panel-origin')
     runtime=None
     if args.panel_control or args.panel_origin or args.panel_loopback_test or args.panel_tls_cert or args.panel_tls_key:
         from panel_identity import PanelIdentity
@@ -600,8 +628,8 @@ def main():
         with os.fdopen(os.open(tokenfile,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600),'w') as file:
             file.write(secrets.token_urlsafe(32))
     server_type=PanelHTTPServer if runtime else ThreadingHTTPServer
-    server=server_type(('127.0.0.1',args.port),Handler)
-    server.legacy_origin=f'http://127.0.0.1:{server.server_port}'
+    server=server_type((args.host,args.port),Handler)
+    server.legacy_origin=external or f'http://{args.host}:{server.server_port}'
     if runtime:
         server.panel_config=config; server.panel_runtime=runtime
         server.panel_admin_enabled=True
@@ -616,7 +644,7 @@ def main():
     server.speed_tests=SpeedTests(server.registry,local_server_id=args.speed_local_server_id,xray_binary=args.speed_xray_binary)
     server.token=tokenfile.read_text().strip()
     scheme='https' if runtime and not config.test else 'http'
-    print(f'Independent API: {scheme}://127.0.0.1:{server.server_port}/health; administrator token stored in {tokenfile}',flush=True)
+    print(f'Independent API: {scheme}://{args.host}:{server.server_port}/health; administrator token stored in {tokenfile}',flush=True)
     import signal
     def stop(_signal,_frame): raise KeyboardInterrupt
     signal.signal(signal.SIGTERM,stop)

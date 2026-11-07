@@ -1,6 +1,6 @@
 {
   "project": "miaomiaowu-x-independent",
-  "build_id": "independent-preview-20261107.3",
+  "build_id": "independent-preview-20261108.1",
   "installer_version": "install-047.1",
   "files": [
     {
@@ -20,13 +20,13 @@
     },
     {
       "path": "ONE-CLICK-INSTALL.md",
-      "bytes": 3509,
-      "sha256": "487d1ae2aef0290d9541b25bcea5d6815445b7a130c8eaff01c7202282529b6f"
+      "bytes": 4321,
+      "sha256": "8ab61cb17fde3f2cfa850da2100a60c0b4e3c9f9a9eddaeb556cd0dc62c6eb54"
     },
     {
       "path": "README.md",
-      "bytes": 4271,
-      "sha256": "8b77c836831c98590b5f54f0e88a302e9d309ddd24f6cef3f1bd9783340d2b79"
+      "bytes": 5075,
+      "sha256": "9cf296027d62261578f01a2f67153601d7bcdb513f292f03bfdd68716518a224"
     },
     {
       "path": "SOURCE-VERSION",
@@ -470,8 +470,8 @@
     },
     {
       "path": "independent/server.py",
-      "bytes": 44329,
-      "sha256": "16bff111f932e0c3e814c08768cae0c42c75c3f1e215283c556b517e13c8d7d2"
+      "bytes": 46281,
+      "sha256": "b3098f801afc47f5b1c96e0d24ef022c733272a4e966b389482638d6e65dce9a"
     },
     {
       "path": "independent/server_admin.py",
@@ -1104,6 +1104,11 @@
       "sha256": "06ab608cbd727779990e288576ce275b2d8f03d02e071b8ac8cea918a31b6b68"
     },
     {
+      "path": "independent/test_server_host.py",
+      "bytes": 5845,
+      "sha256": "4cbad791b3f79e9bbda6f15fe30919173d8625b652f62fa292cd8337075a2be8"
+    },
+    {
       "path": "independent/test_sharing.py",
       "bytes": 23855,
       "sha256": "3bc61e96d142282dad4e31401215297df6a17481e0ecc227fb2f805a551a82d7"
@@ -1335,8 +1340,8 @@
     },
     {
       "path": "run.py",
-      "bytes": 1888,
-      "sha256": "594459c3c4dfa4779abf6a0e6b535405136fd7c2d44ae63ced40862b2dec70af"
+      "bytes": 2116,
+      "sha256": "19eba2000365640b080619df49455cd47baea05af9e15172b384bd050cd1de9b"
     },
     {
       "path": "web/bandwidth-catalog.js",

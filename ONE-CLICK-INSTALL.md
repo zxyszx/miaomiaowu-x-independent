@@ -1,4 +1,8 @@
-# Linux 自动检测首次安装
+# 妙妙屋 X Linux 自动检测首次安装
+
+本项目基于公开妙妙屋工程结构逐步复用，维护为独立增量测试版本；原版对照仓库为 [zxyszx/miaomiaowu](https://github.com/zxyszx/miaomiaowu)，fork 自上游 [iluobei/miaomiaowu](https://github.com/iluobei/miaomiaowu)。当前可用范围是 health、四个 manage 页面及对应 API，完整原版 UI、逐页对照、真实登录接线、网页更新和探针/测速完整流程仍待接入。
+
+当前导出源码为 `independent-preview-20261108.1`，启动器支持 `--host`、`--external-origin`、`--port`。随包安装器仍为 `install-047.1`，固定旧构建，下面命令不会安装新构建或提供直接 IP 访问。已安装用户不要重复执行首次安装；新构建的固定来源安装和保留 data 升级步骤须验收发布后提供。
 
 安装器 install-047.1 参考原版妙妙屋的入口组织方式（系统、架构、包管理器、服务管理器检测），下载本项目固定源码，不下载原版官方二进制或 guard。实现 apt/dnf/yum + systemd 的 x86_64/aarch64 首次安装；Debian 12 ARM64 已在专用 VM 实测，其他组合待测。识别 OpenRC、apk/Alpine 和无 init 容器后准确拒绝；这些分支和 Docker/Postgres 部署尚未实现，不宣称全平台通过。
 
