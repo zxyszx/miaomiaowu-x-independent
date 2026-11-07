@@ -1,0 +1,13 @@
+**
+!Dockerfile
+!.dockerignore
+!docker-entrypoint.py
+!run.py
+!LICENSE
+!NOTICE
+!independent/
+!independent/*.py
+!web/
+!web/*.html
+!web/*.js
+!web/*.css

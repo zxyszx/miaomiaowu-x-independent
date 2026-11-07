@@ -2,11 +2,22 @@
   "project": "miaomiaowu-x-independent",
   "build_id": "independent-preview-20261108.1",
   "installer_version": "install-050.1",
+  "docker_version": "docker-051.1",
   "files": [
+    {
+      "path": ".dockerignore",
+      "bytes": 148,
+      "sha256": "203b13a4164cbbcc1113b661755409c40a350b06b876892bc40bae000575c4ab"
+    },
     {
       "path": ".gitignore",
       "bytes": 181,
       "sha256": "02ed91e5b922515469f23c9b304cc7491f7e0e712187c3ac2fae0b4987857671"
+    },
+    {
+      "path": "Dockerfile",
+      "bytes": 951,
+      "sha256": "4a33413f763bc5609db284ecf2d052dc7de358a2a68d176f0764c2854a71fd04"
     },
     {
       "path": "LICENSE",
@@ -20,18 +31,28 @@
     },
     {
       "path": "ONE-CLICK-INSTALL.md",
-      "bytes": 6410,
-      "sha256": "c39336d62adad093c5e485d28f9c29b9e596c560c5aefa500ef90cb6f575ae1a"
+      "bytes": 6763,
+      "sha256": "70ba731ed19c496300433dc6299ce91133bebef09bd5b6a9dc564f09ad067c0e"
     },
     {
       "path": "README.md",
-      "bytes": 6573,
-      "sha256": "d9f4c2d6309dd82d9ec5f5466ef459039a98c4fd7177bda2ee87d67637daf3cd"
+      "bytes": 8918,
+      "sha256": "affd7e10e6b344a3066ea1a8a2e1b2bc523d54f9826301a45ad3f0098a416469"
     },
     {
       "path": "SOURCE-VERSION",
       "bytes": 6,
       "sha256": "5b57e3b8c153d1d33b0c0f1ee29d3de1bf93232ed95aa78b80fe885e99faa915"
+    },
+    {
+      "path": "compose.yaml",
+      "bytes": 458,
+      "sha256": "5e0adc681a4ce7093d76badcbf809bfa0caedb6307ef64ece7ff3408b47d913c"
+    },
+    {
+      "path": "docker-entrypoint.py",
+      "bytes": 3525,
+      "sha256": "70e8a49f6ae98d53767787d9c6d12c981047caa18c890129da5e892d7d0c0bb6"
     },
     {
       "path": "independent/accounts.py",

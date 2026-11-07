@@ -10,14 +10,50 @@
 - `/manage/servers`、`/manage/nodes`、`/manage/plans`、`/manage/bandwidth` 四个管理页面及其当前 API。
 - 外置 data、Bearer token 内存使用、systemd低权限运行，以及显式监听地址和固定浏览器Origin。
 - Linux首次安装及已安装047版本的保留数据升级入口；Debian12 ARM64已实测。
+- Docker源码构建和Compose部署，容器重建保持独立data与token。
 
 目标/待接入：完整原版 UI 与 dashboard、逐页原版对照、真实登录接线、网页更新、探针/测速完整产品流程、自动 Agent、生产部署。原版的探针和完整业务能力仅作为后续目标，未在此冒充已实现。
 
 ## 安装部署
 
-当前源码构建为 `independent-preview-20261108.1`，安装器为 `install-050.1`。安装器校验固定源码commit、manifest及每个文件，默认监听 `0.0.0.0:45300`，并绑定一个明确的浏览器访问Origin。HTTP未加密，请在测试环境按需放行端口并限制防火墙来源；公网TLS和完整登录尚未提供。
+两种方式任选一种。当前runtime为 `independent-preview-20261108.1`；HTTP未加密，请限制访问来源。完整登录、TLS、网页更新仍未提供。
 
-Linux 一键入口会自动检测架构、apt/dnf/yum 和运行中的 systemd，准备独立 Python 3.12，不修改系统 Python。Debian 12 ARM64 是当前真实安装基线；其他发行版和 x86_64 仍待实测。OpenRC、Docker、Compose、Postgres 和无 systemd 容器部署未实现，检测到时会拒绝。
+### 方式 1：Docker 部署（推荐）
+
+需要已安装[Docker Engine](https://docs.docker.com/engine/install/)；使用Compose时还需要Compose插件。本项目尚无公开预构建镜像，请从本仓库构建：
+
+```sh
+git clone https://github.com/zxyszx/miaomiaowu-x-independent.git
+cd miaomiaowu-x-independent
+read -r -p '浏览器访问源（如 http://实际服务器IP:8080）: ' MMX_EXTERNAL_ORIGIN
+export MMX_EXTERNAL_ORIGIN
+docker build -t miaomiaowu-x-independent:local .
+docker run -d --name miaomiaowu-x \
+  --read-only --tmpfs /tmp --security-opt no-new-privileges:true \
+  -p "${MMX_HOST_PORT:-8080}:45300" \
+  -e MMX_EXTERNAL_ORIGIN \
+  -v mmx_data:/app/data \
+  miaomiaowu-x-independent:local
+```
+
+默认宿主8080映射容器45300，浏览器打开安装日志输出的访问源后追加 `/manage/servers`，另有nodes、plans、bandwidth。`MMX_EXTERNAL_ORIGIN`必须是浏览器真实访问源，不得填0.0.0.0；容器端口固定45300，Origin应使用宿主端口8080，二者无需相同。自定义宿主端口时，先 `export MMX_HOST_PORT=8081` 并输入对应Origin。
+
+也可以在同一源码目录、设置Origin后改用Compose（不要与上面的容器同时占用相同端口）：
+
+```sh
+docker compose up --build -d
+docker compose logs --tail=30
+```
+
+读取token：Docker run方式执行 `docker exec --user 10001 miaomiaowu-x cat /app/data/admin-token`；Compose方式执行 `docker compose exec --user 10001 miaomiaowu cat /app/data/admin-token`。只在自己的终端读取并填入页面，不发聊天或日志。
+
+data持久化到命名卷，Compose为项目独立创建卷。容器前台服务以UID/GID10001运行；入口仅初始化空挂载目录，不递归修改旧数据权限。需要bind挂载时，先 `mkdir -p mmx-data` 创建全新空目录，再用 `--mount "type=bind,src=$PWD/mmx-data,dst=/app/data"` 替换 `-v`；不需要手工chown。不要直接挂载Linux安装数据或其他旧库，跨部署迁移未实现。
+
+`docker stop miaomiaowu-x` 或 `docker compose down` 停止服务后保留卷；删除并重建容器时继续使用同一卷即可保持记录和token。不要使用 `down -v` 或删除卷。当前无容器内自动更新、自动镜像发布或通用跨版本数据回退。
+
+### 方式 2：一键安装（Linux）
+
+安装器 `install-050.1` 校验固定源码commit、manifest及每文件hash，默认监听0.0.0.0:45300。它检测架构、apt/dnf/yum及运行中的systemd，准备独立Python3.12，不修改系统Python。Debian12 ARM64已实测，其他发行版与x86_64待实测；OpenRC、Postgres及无systemd环境不支持。容器请使用方式1，不在容器内运行一键脚本。
 
 root 终端执行：
 
@@ -70,7 +106,7 @@ wget -qO- https://raw.githubusercontent.com/zxyszx/miaomiaowu-x-independent/main
 
 ## 页面与技术特点
 
-当前页面通过安装器输出的访问源打开四个 `/manage` 路径。项目使用Python标准库、独立SQLite data和HTTP；手动运行 `run.py` 仍默认loopback，非回环监听必须显式配置固定external-origin，不能填写0.0.0.0。服务不从请求Host推导信任。不提供公网TLS、完整登录、官方Demo账号或截图承诺。原版截图、Demo账号、Docker/Compose/Postgres部署说明不属于本项目交付。
+当前页面通过部署时配置的访问源打开四个 `/manage` 路径。项目使用Python标准库、独立SQLite data和HTTP；手动运行 `run.py` 仍默认loopback，非回环监听必须显式配置固定external-origin，不能填写0.0.0.0。服务不从请求Host推导信任。不提供公网TLS、完整登录、官方Demo账号或截图承诺；Postgres部署未实现。
 
 ## 免责声明
 
@@ -82,6 +118,7 @@ LICENSE 保留既有版权和许可文本，NOTICE 说明本导出的来源边�
 
 ## 更新日志
 
+- `docker-051.1`：源码构建Docker/Compose、宿主8080映射容器45300、空挂载初始化及低权限运行，重建保留data。
 - `install-050.1` / `independent-preview-20261108.1`：固定新版runtime，默认直接访问、明确Origin与端口配置、047保留data升级及失败旧unit恢复。
 - `independent-preview-20261107.3`：独立四页面测试包、固定 manifest、外置 data 和 SSH loopback 访问。
 - `install-047.1`：Linux 架构/包管理器/systemd 检测、固定源码校验、独立 Python 3.12 和低权限首次安装入口。

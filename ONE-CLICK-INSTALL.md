@@ -1,5 +1,7 @@
 # 妙妙屋 X Linux 安装与047保留数据升级
 
+本页仅说明方式2（Linux一键安装）；方式1 Docker部署（推荐）见[README](README.md)，使用仓库自带Dockerfile/compose.yaml从源码构建，默认宿主8080→容器45300、持久/app/data，Origin填写实际宿主访问源。不要在容器内运行本页systemd安装脚本，也不要把Linux安装data直接挂给容器。
+
 本项目基于公开妙妙屋工程结构逐步复用，维护为独立增量测试版本；原版对照仓库为 [zxyszx/miaomiaowu](https://github.com/zxyszx/miaomiaowu)，fork 自上游 [iluobei/miaomiaowu](https://github.com/iluobei/miaomiaowu)。当前可用范围是 health、四个 manage 页面及对应 API，完整原版 UI、逐页对照、真实登录接线、网页更新和探针/测速完整流程仍待接入。
 
 源码构建为 `independent-preview-20261108.1`，安装入口为 `install-050.1`。无参数首次安装，显式 `update` 升级未修改的047安装；不会将重装当作升级。
