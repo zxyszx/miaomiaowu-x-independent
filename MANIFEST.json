@@ -1,6 +1,7 @@
 {
   "project": "miaomiaowu-x-independent",
   "build_id": "independent-preview-20261107.3",
+  "installer_version": "install-047.1",
   "files": [
     {
       "path": ".gitignore",
@@ -18,9 +19,14 @@
       "sha256": "0e0f44d3b6e6df5e1ecf365bf1fd15fda3b19f2adb3dba75cbd3626b1a541331"
     },
     {
+      "path": "ONE-CLICK-INSTALL.md",
+      "bytes": 3509,
+      "sha256": "487d1ae2aef0290d9541b25bcea5d6815445b7a130c8eaff01c7202282529b6f"
+    },
+    {
       "path": "README.md",
-      "bytes": 1045,
-      "sha256": "b476110bf374e0d4bccb38e246e8c360155818aebabaed7feb4acf31665967ce"
+      "bytes": 4271,
+      "sha256": "8b77c836831c98590b5f54f0e88a302e9d309ddd24f6cef3f1bd9783340d2b79"
     },
     {
       "path": "SOURCE-VERSION",
@@ -1321,6 +1327,11 @@
       "path": "independent/xray_runtime.py",
       "bytes": 9134,
       "sha256": "c8442e41808f4e18bda569067bbe66c470103eab9319a4c8698c1d17d4c4a9ae"
+    },
+    {
+      "path": "install.sh",
+      "bytes": 7883,
+      "sha256": "dd1eac722e3d15dd7efcfda47c45c849ec0d0bdf5bc4aa558349ce8311059580"
     },
     {
       "path": "run.py",
