@@ -1,0 +1,9 @@
+/* Keep intrinsic link widths so the original overflow menu measures real labels. */
+.app-topbar nav > [data-nav-item] {
+  flex-shrink: 0;
+  min-width: max-content;
+}
+.app-topbar nav > [data-nav-item] > span {
+  flex-shrink: 0;
+  white-space: nowrap;
+}

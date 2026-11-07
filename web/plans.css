@@ -1,0 +1,15 @@
+nav { display: flex; flex-wrap: wrap; gap: 16px; }
+a { color: var(--text); text-underline-offset: 4px; }
+nav a { display: inline-flex; align-items: center; min-height: 44px; }
+#plan-form { margin-top: 20px; }
+#plans-fields > label { display: block; margin-top: 16px; }
+#plans-fields:disabled { opacity: 1; }
+#plans-fields:disabled input, #plans-fields:disabled select { opacity: 1; color: var(--muted); background: var(--bg); }
+#form-error { min-height: 1.6em; display: block; }
+#plan-status, #list-status { min-height: 1.6em; }
+
+.danger { border-color: var(--error); color: var(--panel); background: var(--error); }
+.danger.secondary { color: var(--error); background: var(--panel); }
+#delete-form { border: 0; padding: 0; }
+#delete-target { font-weight: 600; overflow-wrap: anywhere; }
+#delete-error { display: block; min-height: 1.6em; }

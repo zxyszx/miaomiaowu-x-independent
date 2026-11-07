@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>临时 API 带宽编辑 · 妙妙屋 X</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="bandwidth-form.css">
+  <link rel="stylesheet" href="bandwidth-live.css">
+  <script defer src="field-values.js"></script>
+  <script defer src="bandwidth-form.js"></script>
+  <script defer src="bandwidth-resource.js"></script>
+  <script defer src="bandwidth-http.js"></script>
+  <script defer src="bandwidth-live.js"></script>
+</head>
+<body>
+  <main>
+    <header><p class="eyebrow">妙妙屋 X <span>临时 API 联调</span></p><h1>带宽设置</h1>
+      <p class="muted">仅用于隔离测试服务。配置保存在临时数据库中，关闭测试服务即清理。</p></header>
+    <section aria-labelledby="auth-title"><h2 id="auth-title">授权临时 API</h2>
+      <form id="auth-form" autocomplete="off">
+        <label for="admin-token">管理员测试凭据</label>
+        <input id="admin-token" type="password" class="credential" autocomplete="off" spellcheck="false" required maxlength="128" aria-describedby="auth-help">
+        <p id="auth-help" class="hint">只使用本次临时服务的凭据。仅在当前页面内存中使用；授权后清空输入框。</p>
+        <div class="actions"><button id="authorize" type="submit">授权并验证</button><button id="forget" type="button" class="secondary">清除当前授权</button></div>
+        <p id="auth-status" role="status">尚未授权。</p>
+      </form>
+    </section>
+    <section aria-labelledby="resource-title"><h2 id="resource-title">选择示例资源</h2>
+      <label for="resource">套餐节点</label>
+      <select id="resource"><option value="1">示例套餐 / 节点 A</option><option value="2">示例套餐 / 节点 B</option></select>
+      <p class="hint">切换资源或重新读取会替换未保存的草稿。</p>
+      <button id="reload" class="secondary" type="button">重新读取配置</button>
+      <p id="resource-status" role="status"></p>
+    </section>
+    <form id="bandwidth-form" novalidate>
+      <fieldset id="editor-fields" disabled aria-label="带宽草稿">
+      <fieldset class="mode"><legend>设置来源</legend>
+        <label><input type="radio" name="source" value="inherit">继承上级设置</label>
+        <label><input type="radio" name="source" value="override">单独设置</label>
+        <p class="hint">继承使用上级规则；单独设置中的“不限速”是明确覆写。</p>
+      </fieldset>
+      <div class="directions">
+        <fieldset id="upload-group"><legend>上传</legend>
+          <label for="upload-kind">上传方式</label>
+          <select id="upload-kind"><option value="limited">限速</option><option value="unlimited">不限速</option></select>
+          <label for="upload-rate">上传上限 <span class="muted">（Mbps）</span></label>
+          <input id="upload-rate" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" maxlength="64" aria-describedby="rate-help upload-error">
+          <p id="upload-error" class="error" aria-live="polite"></p>
+        </fieldset>
+        <fieldset id="download-group"><legend>下载</legend>
+          <label for="download-kind">下载方式</label>
+          <select id="download-kind"><option value="limited">限速</option><option value="unlimited">不限速</option></select>
+          <label for="download-rate">下载上限 <span class="muted">（Mbps）</span></label>
+          <input id="download-rate" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" maxlength="64" aria-describedby="rate-help download-error">
+          <p id="download-error" class="error" aria-live="polite"></p>
+        </fieldset>
+      </div>
+      <p id="rate-help" class="hint">请输入正数 Mbps；0 不表示不限速或继承。最小值为 0.000008 Mbps，最大值为 8589.934592 Mbps，换算后须为整数字节/秒。</p>
+      <p id="form-errors" class="error" role="alert"></p>
+      <div class="actions"><button type="submit">保存到临时 API</button><button type="reset" class="secondary">恢复已读取配置</button></div>
+      </fieldset>
+      <p id="form-status" class="hint" role="status"></p>
+    </form>
+    <section id="preview" hidden aria-labelledby="preview-title"><h2 id="preview-title">待保存设置</h2><p id="preview-text"></p><p class="hint">仅预览，尚未保存。</p></section>
+  </main>
+</body>
+</html>

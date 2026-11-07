@@ -1,0 +1,34 @@
+:root { color-scheme: light dark; --bg: #fafafa; --panel: #fff; --text: #18181b; --muted: #52525b; --line: #d4d4d8; --error: #b91c1c; --focus: #2563eb; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 system-ui, sans-serif; }
+main { max-width: 760px; margin: 48px auto; padding: 0 24px; }
+header { margin-bottom: 28px; }
+h1 { margin: 8px 0; font-size: 28px; line-height: 1.3; }
+h2 { font-size: 18px; margin: 0 0 8px; }
+p { margin: 8px 0; overflow-wrap: anywhere; }
+.eyebrow { font-size: 14px; font-weight: 600; }
+.eyebrow span { margin-left: 12px; padding: 3px 8px; border: 1px solid var(--line); border-radius: 6px; font-weight: 400; }
+.muted, .hint { color: var(--muted); }
+.hint { font-size: 14px; }
+form, section { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 24px; }
+section { margin-top: 20px; }
+fieldset { margin: 0; min-width: 0; border: 0; padding: 0; }
+legend { padding: 0; margin-bottom: 8px; font-weight: 600; }
+.mode label { display: inline-flex; align-items: center; min-height: 44px; margin-right: 18px; gap: 8px; cursor: pointer; }
+input[type=radio] { width: 18px; height: 18px; margin: 0; accent-color: var(--text); }
+.directions { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; border-top: 1px solid var(--line); margin-top: 20px; padding-top: 20px; }
+.directions label { display: block; margin: 10px 0 6px; font-size: 14px; }
+select, input[type=text], button { font: inherit; border: 1px solid var(--line); border-radius: 6px; min-height: 44px; }
+select, input[type=text] { width: 100%; padding: 8px 12px; background: var(--panel); color: var(--text); }
+input[aria-invalid=true] { border-color: var(--error); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+:disabled { opacity: .5; cursor: not-allowed; }
+.error { color: var(--error); font-size: 14px; }
+.error:empty { display: none; }
+.directions .error, .directions .error:empty { display: block; min-height: 3.2em; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+button { padding: 8px 16px; color: var(--panel); background: var(--text); cursor: pointer; font-weight: 500; }
+button.secondary { background: var(--panel); color: var(--text); }
+@media (max-width: 560px) { main { margin: 24px auto; padding: 0 16px; } form, section { padding: 20px; } .directions { grid-template-columns: 1fr; gap: 20px; } .actions button { width: 100%; } }
+@media (prefers-color-scheme: dark) { :root { --bg: #09090b; --panel: #18181b; --text: #fafafa; --muted: #a1a1aa; --line: #52525b; --error: #fca5a5; --focus: #60a5fa; } }

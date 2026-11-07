@@ -1,0 +1,5 @@
+section + form { margin-top: 20px; }
+#auth-form { border: 0; padding: 0; }
+.credential { width: 100%; min-height: 44px; padding: 8px 12px; font: inherit; background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 6px; }
+#editor-fields:disabled, #editor-fields fieldset:disabled { opacity: 1; cursor: default; }
+#editor-fields:disabled input, #editor-fields:disabled select { opacity: 1; color: var(--muted); background: var(--bg); }

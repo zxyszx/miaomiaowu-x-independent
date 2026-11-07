@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>登录妙妙屋 · 妙妙屋 X</title>
+  <link rel="stylesheet" href="panel-login.css">
+</head>
+<body>
+  <main class="login-shell">
+    <section class="login-card" aria-labelledby="login-title">
+      <header class="login-header">
+        <div class="brand-mark" aria-hidden="true">✦</div>
+        <p class="eyebrow">妙妙屋 X <span>独立面板</span></p>
+        <h1 id="login-title">登录妙妙屋</h1>
+        <p class="subtitle">请输入用户账号以访问妙妙屋</p>
+      </header>
+
+      <section class="login-form" aria-label="登录字段">
+        <div class="field-group">
+          <label for="username">用户名</label>
+          <input id="username" name="username" type="text" autocomplete="username" autocapitalize="none" placeholder="请输入用户名" autofocus>
+        </div>
+        <div class="field-group">
+          <label for="password">密码</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" placeholder="请输入密码">
+        </div>
+        <label class="remember-row" for="remember-me">
+          <input id="remember-me" name="remember_me" type="checkbox">
+          <span>记住我</span>
+        </label>
+        <button class="submit-button" type="button" disabled>登录</button>
+        <p class="disabled-note" role="note">登录功能尚未接入，当前仅展示页面布局。</p>
+      </section>
+    </section>
+    <p class="footer-note">独立妙妙屋 · 本页不会收发或保存凭据</p>
+  </main>
+</body>
+</html>
