@@ -31,13 +31,13 @@
     },
     {
       "path": "ONE-CLICK-INSTALL.md",
-      "bytes": 6763,
-      "sha256": "70ba731ed19c496300433dc6299ce91133bebef09bd5b6a9dc564f09ad067c0e"
+      "bytes": 7972,
+      "sha256": "74ea415d6d13f1d41627e85af51a47aa4b51b81dc13bc59df31ebaeb0f131fda"
     },
     {
       "path": "README.md",
-      "bytes": 8918,
-      "sha256": "affd7e10e6b344a3066ea1a8a2e1b2bc523d54f9826301a45ad3f0098a416469"
+      "bytes": 3814,
+      "sha256": "84916c14804978fd2710166d4370ba61d761bb0f0d1659c6c80ecac77e74e512"
     },
     {
       "path": "SOURCE-VERSION",
