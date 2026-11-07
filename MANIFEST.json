@@ -1,7 +1,7 @@
 {
   "project": "miaomiaowu-x-independent",
   "build_id": "independent-preview-20261108.1",
-  "installer_version": "install-047.1",
+  "installer_version": "install-050.1",
   "files": [
     {
       "path": ".gitignore",
@@ -20,13 +20,13 @@
     },
     {
       "path": "ONE-CLICK-INSTALL.md",
-      "bytes": 4321,
-      "sha256": "8ab61cb17fde3f2cfa850da2100a60c0b4e3c9f9a9eddaeb556cd0dc62c6eb54"
+      "bytes": 6410,
+      "sha256": "c39336d62adad093c5e485d28f9c29b9e596c560c5aefa500ef90cb6f575ae1a"
     },
     {
       "path": "README.md",
-      "bytes": 5075,
-      "sha256": "9cf296027d62261578f01a2f67153601d7bcdb513f292f03bfdd68716518a224"
+      "bytes": 6573,
+      "sha256": "d9f4c2d6309dd82d9ec5f5466ef459039a98c4fd7177bda2ee87d67637daf3cd"
     },
     {
       "path": "SOURCE-VERSION",
@@ -1335,8 +1335,8 @@
     },
     {
       "path": "install.sh",
-      "bytes": 7883,
-      "sha256": "dd1eac722e3d15dd7efcfda47c45c849ec0d0bdf5bc4aa558349ce8311059580"
+      "bytes": 18181,
+      "sha256": "c0e371c9610517562d3ecccd2b9b94fda291f8e1783a110c5fdd60bbaa65333d"
     },
     {
       "path": "run.py",

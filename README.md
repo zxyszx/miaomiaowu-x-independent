@@ -8,13 +8,14 @@
 
 - 独立 `/health` 健康检查。
 - `/manage/servers`、`/manage/nodes`、`/manage/plans`、`/manage/bandwidth` 四个管理页面及其当前 API。
-- `127.0.0.1:45300` loopback 服务、外置 data、Bearer token 内存使用和 systemd 低权限运行。
+- 外置 data、Bearer token 内存使用、systemd低权限运行，以及显式监听地址和固定浏览器Origin。
+- Linux首次安装及已安装047版本的保留数据升级入口；Debian12 ARM64已实测。
 
 目标/待接入：完整原版 UI 与 dashboard、逐页原版对照、真实登录接线、网页更新、探针/测速完整产品流程、自动 Agent、生产部署。原版的探针和完整业务能力仅作为后续目标，未在此冒充已实现。
 
 ## 安装部署
 
-当前源码构建为 `independent-preview-20261108.1`，包含显式 IPv4 监听及固定浏览器 Origin 参数。随包安装器仍为 `install-047.1`，固定安装旧构建 `independent-preview-20261107.3`；下面的一键入口目前仍只提供旧构建的 loopback 安装。新构建的直接 IP 安装入口尚未发布，不要对已安装系统重复执行首次安装。
+当前源码构建为 `independent-preview-20261108.1`，安装器为 `install-050.1`。安装器校验固定源码commit、manifest及每个文件，默认监听 `0.0.0.0:45300`，并绑定一个明确的浏览器访问Origin。HTTP未加密，请在测试环境按需放行端口并限制防火墙来源；公网TLS和完整登录尚未提供。
 
 Linux 一键入口会自动检测架构、apt/dnf/yum 和运行中的 systemd，准备独立 Python 3.12，不修改系统 Python。Debian 12 ARM64 是当前真实安装基线；其他发行版和 x86_64 仍待实测。OpenRC、Docker、Compose、Postgres 和无 systemd 容器部署未实现，检测到时会拒绝。
 
@@ -24,13 +25,24 @@ root 终端执行：
 curl -fL https://raw.githubusercontent.com/zxyszx/miaomiaowu-x-independent/main/install.sh | bash
 ```
 
-普通用户可将末尾 `bash` 改为 `sudo bash`；若入口环境只有 wget：
+普通用户先 `sudo -i` 进入root终端，再配置环境变量并执行命令；若入口环境只有wget：
 
 ```sh
 wget -qO- https://raw.githubusercontent.com/zxyszx/miaomiaowu-x-independent/main/install.sh | bash
 ```
 
-代码和 runtime 位于 `/opt/miaomiaowu-x-independent`，外置 data 位于 `/var/lib/miaomiaowu-x-independent`，默认服务名为 `miaomiaowu-x-independent.service`，只监听 `127.0.0.1:45300`。通过 SSH 访问：
+代码和专用Python位于 `/opt/miaomiaowu-x-independent`，外置data位于 `/var/lib/miaomiaowu-x-independent`，默认服务名为 `miaomiaowu-x-independent.service`。安装结束会输出四个完整管理URL，例如访问源后追加 `/manage/servers`；另有 `/manage/nodes`、`/manage/plans`、`/manage/bandwidth`。
+
+推荐显式指定访问源，尤其使用域名、NAT或多网卡时。在执行首次安装或下方升级命令前，先在root终端输入浏览器实际使用的 `http://服务器IPv4或域名:端口`：
+
+```sh
+read -r -p '浏览器访问源（含协议和端口）: ' MMX_EXTERNAL_ORIGIN
+export MMX_EXTERNAL_ORIGIN
+```
+
+未指定时，安装器仅在两个HTTPS探测结果一致且为公网IPv4时采用该地址；探测失败会停止并给出配置命令，不用私网地址冒充公网。探测得到的是出口IPv4，不代表入站路由或防火墙已放行。访问时使用安装器输出的完整URL，其他Origin会被拒绝。
+
+端口默认45300，`MMX_PORT`优先于`PORT`；指定Origin的端口须与监听端口一致。需要自定义时先 `export MMX_PORT=45300` 并设置对应Origin。只想通过SSH访问时，在安装或升级前 `export MMX_HOST=127.0.0.1`，不指定Origin则使用同端口loopback访问源；然后在自己电脑执行：
 
 ```sh
 ssh -N -L 45300:127.0.0.1:45300 user@server
@@ -40,13 +52,25 @@ ssh -N -L 45300:127.0.0.1:45300 user@server
 
 ## 更新与卸载
 
-网页更新、自动升级和卸载入口当前未实现。重复首次安装会拒绝。已安装用户应等待经过验收的升级包和具体切换步骤：停服后备份 data，将核验的新构建放入新的代码目录，修改 systemd 的代码入口并继续使用原外置 data；保留旧代码目录，核对原记录与 token 后再确认切换。当前不提供尚未发布构建的下载或切换命令；不要删除原 data，也不要重跑首次安装代替升级。未知 schema 不保证回退，旧 0.2.7 数据不导入。故障只保留诊断状态，不自动删除或盲目恢复数据。
+已通过047安装器安装 `.3` 的用户，在root终端执行保留数据升级；可先按上文显式设置Origin和端口：
 
-手动启动新源码时，`run.py` 默认仍监听 `127.0.0.1:45300`。非 loopback 监听须同时显式提供 `--host`、`--port` 和 `--external-origin`，后者为浏览器实际访问的 `http[s]://IP或域名:端口`，不能填写 `0.0.0.0`。服务只信任这个固定 Origin，不从请求 Host 推导信任。HTTP 不提供传输加密，直接访问前需要限制防火墙来源；当前未提供公网 TLS 或完整登录入口。
+```sh
+curl -fL https://raw.githubusercontent.com/zxyszx/miaomiaowu-x-independent/main/install.sh | bash -s -- update
+```
+
+只有wget时：
+
+```sh
+wget -qO- https://raw.githubusercontent.com/zxyszx/miaomiaowu-x-independent/main/install.sh | bash -s -- update
+```
+
+该入口仅识别未修改的047安装和原unit，不接管其他版本或自定义unit。它先核验新代码，停服后创建root-only一致性data备份，再将新构建放到 `/opt/miaomiaowu-x-independent-build-20261108-1`，自动切换systemd并继续使用原data、token和低权限账号。原代码保留；备份目录会在终端显示。失败会保留诊断并恢复原unit及旧服务，不回灌、不删除data。请检查退出码及日志；旧服务恢复失败时须先处理故障，不要重跑首次安装或删除数据库。重复升级、残留新构建目录及未知安装均会拒绝。
+
+无参数仍是首次安装，遇到已有目录会拒绝。网页更新、自动升级、卸载及通用跨版本回退尚未实现；旧0.2.7数据不导入。本次升级已核对数据实现未变化，不能外推其他schema版本也可回退。
 
 ## 页面与技术特点
 
-当前页面可通过上述 SSH 隧道访问四个 `/manage` 路径。项目使用 Python 标准库运行时、独立 SQLite data 和 loopback HTTP；不提供公网 TLS、完整登录、官方 Demo 账号或截图承诺。原版截图、Demo 账号、Docker/Compose/Postgres 部署说明不属于本项目交付。
+当前页面通过安装器输出的访问源打开四个 `/manage` 路径。项目使用Python标准库、独立SQLite data和HTTP；手动运行 `run.py` 仍默认loopback，非回环监听必须显式配置固定external-origin，不能填写0.0.0.0。服务不从请求Host推导信任。不提供公网TLS、完整登录、官方Demo账号或截图承诺。原版截图、Demo账号、Docker/Compose/Postgres部署说明不属于本项目交付。
 
 ## 免责声明
 
@@ -58,7 +82,7 @@ LICENSE 保留既有版权和许可文本，NOTICE 说明本导出的来源边�
 
 ## 更新日志
 
-- `independent-preview-20261108.1`：源码增加显式 IPv4 监听、固定外部 Origin 和启动器参数透传；随包安装器仍为 `install-047.1`，新构建安装及升级入口待验收发布。
+- `install-050.1` / `independent-preview-20261108.1`：固定新版runtime，默认直接访问、明确Origin与端口配置、047保留data升级及失败旧unit恢复。
 - `independent-preview-20261107.3`：独立四页面测试包、固定 manifest、外置 data 和 SSH loopback 访问。
 - `install-047.1`：Linux 架构/包管理器/systemd 检测、固定源码校验、独立 Python 3.12 和低权限首次安装入口。
 
